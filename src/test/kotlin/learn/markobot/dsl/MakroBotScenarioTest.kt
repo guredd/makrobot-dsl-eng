@@ -33,17 +33,17 @@ class MakroBotScenarioTest {
 
             schedule {                          // context-based high level function with context-lambda
 
-                //wall_e forward 3                        // control methods availability with @DslMarker
+                //wallE forward 3                        // control methods availability with @DslMarker
 
-                repeat(mon at 10, tue at 12)     // typealias, infix functions, vararg
+                repeat(Mon at 10, Tue at 12)     // typealias, infix functions, vararg
                 except(13)
-                repeat(wed..fri at 11)
+                repeat(Wed..Fri at 11)
             }
 
         }.launchNow()
                 .resetSchedule()               // calls chaining
                 .schedule {
-                    repeat(fri at 23)
+                    repeat(Fri at 23)
                 }
 
         val (name, speed) = wallE               // destructuring declarations

@@ -1,10 +1,9 @@
-@file:Suppress("EnumEntryName")
 package learn.markobot.api
 
 import learn.markobot.dsl.MakroBotDsl
 
 enum class WeekDay {
-    mon, tue, wed, thu, fri, sat, sun
+    Mon, Tue, Wed, Thu, Fri, Sat, Sun
 }
 
 @MakroBotDsl
