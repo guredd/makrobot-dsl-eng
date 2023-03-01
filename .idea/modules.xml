@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/makrobot-dsl-eng.test.iml" filepath="$PROJECT_DIR$/.idea/modules/makrobot-dsl-eng.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/makrobot-dsl-eng.iml" filepath="$PROJECT_DIR$/makrobot-dsl-eng.iml" />
     </modules>
   </component>
 </project>
