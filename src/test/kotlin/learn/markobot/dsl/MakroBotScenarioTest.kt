@@ -48,4 +48,53 @@ class MakroBotScenarioTest {
 
         val (name, speed) = wallE               // destructuring declarations
     }
+
+    @Test
+    fun testRobotSetup() {
+        val wallE = robot("Wall-E") {
+            head {
+                plastic withThickness 2
+
+                eyes {
+                    lamps {
+                        quantity = 2
+                        brightness = 10
+                    }
+                    diods {
+                        quantity = 1
+                        brightness = 3
+                    }
+                }
+
+                mouth {
+                    speaker {
+                        power = 3
+                    }
+                }
+            }
+
+            body {
+                metal withThickness 1
+
+                label {
+                    +"I don't want to survive."
+                    +"I want live."
+                }
+            }
+
+            hands {
+                plastic withThickness 3
+                load = light - intermediate
+            }
+
+            chassis = caterpillar withWidth 10
+
+            chassis = legs
+
+            chassis = wheels {
+                diameter = 4
+                quantity = 2
+            }
+        }
+    }
 }

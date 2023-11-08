@@ -1,12 +1,10 @@
-@file:Suppress("FunctionName")
-
 package learn.markobot.dsl
 
 import learn.markobot.api.*
 import kotlin.properties.Delegates
 
-fun робот(name: String, setting: MakrobotContext.() -> Unit): MakroBot {
-    return with(MakrobotContext().apply(setting)) { MakroBot(name, head, body, hands, шасси) }
+fun robot(name: String, setting: MakrobotContext.() -> Unit): MakroBot {
+    return with(MakrobotContext().apply(setting)) { MakroBot(name, head, body, hands, chassis) }
 }
 
 @MakroBotDsl
@@ -15,46 +13,46 @@ class MakrobotContext {
     internal lateinit var head: Head
     internal lateinit var body: Body
     internal lateinit var hands: Hands
-    lateinit var шасси: Chassis
+    lateinit var chassis: Chassis
 
-    fun голова(setting: HeadContext.()->Unit) {
-        with(HeadContext().apply(setting)) { this@MakrobotContext.head = Head(материал, eyes, mouth) }
+    fun head(setting: HeadContext.()->Unit) {
+        with(HeadContext().apply(setting)) { this@MakrobotContext.head = Head(material, eyes, mouth) }
     }
 
-    fun туловище(setting: BodyContext.()->Unit) {
-        with(BodyContext().apply(setting)) { this@MakrobotContext.body = Body(материал, strings) }
+    fun body(setting: BodyContext.()->Unit) {
+        with(BodyContext().apply(setting)) { this@MakrobotContext.body = Body(material, strings) }
     }
 
-    fun руки(setting: HandsContext.()->Unit) {
-        with(HandsContext().apply(setting)) { this@MakrobotContext.hands = Hands(материал, нагрузка.start, нагрузка.endInclusive) }
+    fun hands(setting: HandsContext.()->Unit) {
+        with(HandsContext().apply(setting)) { this@MakrobotContext.hands = Hands(material, load.start, load.endInclusive) }
     }
 
-    infix fun ChassisDsl.шириной(width: Int): Chassis {
+    infix fun ChassisDsl.withWidth(width: Int): Chassis {
         return when(this) {
-            ChassisDsl.caterpillar -> Chassis.Caterpillar(width)
+            ChassisDsl.Caterpillar -> Chassis.Caterpillar(width)
         }
     }
 
-    fun колеса(setting: WheelContext.()->Unit): Chassis {
-        return with(WheelContext().apply(setting)) { Chassis.Wheel(количество, диаметр) }
+    fun wheels(setting: WheelContext.()->Unit): Chassis {
+        return with(WheelContext().apply(setting)) { Chassis.Wheel(quantity, diameter) }
     }
 }
 
 // top-level declaration to avoid enum static import
-val металл = MaterialDsl.metal
-val пластик = MaterialDsl.plastik
+val metal = MaterialDsl.Metal
+val plastic = MaterialDsl.Plastic
 
 enum class MaterialDsl {
-    metal, plastik
+    Metal, Plastic
 }
 
 internal interface Materialized {
-    var материал: Material
+    var material: Material
 
-    infix fun MaterialDsl.толщиной(thickness: Int) {
-        материал = when(this) {
-            MaterialDsl.metal -> Metal(thickness)
-            MaterialDsl.plastik -> Plastik(thickness)
+    infix fun MaterialDsl.withThickness(thickness: Int) {
+        material = when(this) {
+            MaterialDsl.Metal -> Metal(thickness)
+            MaterialDsl.Plastic -> Plastik(thickness)
         }
     }
 }
@@ -62,15 +60,15 @@ internal interface Materialized {
 @MakroBotDsl
 class HeadContext: Materialized {
 
-    override lateinit var материал: Material
+    override lateinit var material: Material
     internal lateinit var eyes: List<Eye>
     internal lateinit var mouth: Mouth
 
-    fun глаза(setting: EyesContext.() -> Unit) {
+    fun eyes(setting: EyesContext.() -> Unit) {
         with(EyesContext().apply(setting)) { this@HeadContext.eyes = eyes }
     }
 
-    fun рот(setting: MouthContext.() -> Unit) {
+    fun mouth(setting: MouthContext.() -> Unit) {
         with(MouthContext().apply(setting)) { this@HeadContext.mouth = Mouth(speaker) }
     }
 }
@@ -79,44 +77,44 @@ class HeadContext: Materialized {
 class EyesContext {
     internal val eyes: MutableList<Eye> = arrayListOf()
 
-    fun диоды(setting: EyeContext.() -> Unit) {
-        val (ledEye, quantity) = with(EyeContext().apply(setting)) { LedEye(яркость) to количество }
+    fun diods(setting: EyeContext.() -> Unit) {
+        val (ledEye, quantity) = with(EyeContext().apply(setting)) { LedEye(brightness) to quantity }
         eyes.apply { repeat(quantity) { add(ledEye) } }
     }
 
-    fun лампы(setting: EyeContext.() -> Unit) {
-        val (lampEye, quantity) = with(EyeContext().apply(setting)) { LampEye(яркость) to количество }
+    fun lamps(setting: EyeContext.() -> Unit) {
+        val (lampEye, quantity) = with(EyeContext().apply(setting)) { LampEye(brightness) to quantity }
         eyes.apply { repeat(quantity) { add(lampEye) } }
     }
 }
 
 @MakroBotDsl
 class EyeContext {
-    var количество by Delegates.notNull<Int>()
-    var яркость by Delegates.notNull<Int>()
+    var quantity by Delegates.notNull<Int>()
+    var brightness by Delegates.notNull<Int>()
 }
 
 @MakroBotDsl
 class MouthContext {
     internal var speaker: Speaker? = null
 
-    fun динамик(setting: SpeakerContext.() -> Unit) {
-        speaker = with(SpeakerContext().apply(setting)) { Speaker(мощность) }
+    fun speaker(setting: SpeakerContext.() -> Unit) {
+        speaker = with(SpeakerContext().apply(setting)) { Speaker(power) }
     }
 }
 
 @MakroBotDsl
 class SpeakerContext {
-    var мощность by Delegates.notNull<Int>()
+    var power by Delegates.notNull<Int>()
 }
 
 @MakroBotDsl
 class BodyContext: Materialized {
 
-    override lateinit var материал: Material
+    override lateinit var material: Material
     internal val strings: MutableList<String> = arrayListOf()
 
-    fun надпись(setting: LabelContext.() -> Unit) {
+    fun label(setting: LabelContext.() -> Unit) {
         with(LabelContext().apply(setting)) { this@BodyContext.strings.addAll(strings) }
     }
 }
@@ -130,17 +128,17 @@ class LabelContext {
     }
 }
 
-val `очень легкая` = LoadClass.VeryLight
-val легкая = LoadClass.Light
-val средняя = LoadClass.Medium
-val тяжелая = LoadClass.Heavy
-val `очень тяжелая` = LoadClass.VeryHeavy
-val ненормальная = LoadClass.Enormous
+val `very light` = LoadClass.VeryLight
+val light = LoadClass.Light
+val intermediate = LoadClass.Medium
+val heavy = LoadClass.Heavy
+val `very heavy` = LoadClass.VeryHeavy
+val enormous = LoadClass.Enormous
 
 @MakroBotDsl
 class HandsContext: Materialized {
-    override lateinit var материал: Material
-    lateinit var нагрузка: ClosedRange<LoadClass>
+    override lateinit var material: Material
+    lateinit var load: ClosedRange<LoadClass>
 }
 
 operator fun LoadClass.minus(arg: LoadClass): ClosedRange<LoadClass> = object : ClosedRange<LoadClass> {
@@ -151,15 +149,15 @@ operator fun LoadClass.minus(arg: LoadClass): ClosedRange<LoadClass> = object : 
 }
 
 enum class ChassisDsl {
-    caterpillar
+    Caterpillar
 }
 
-val гусеницы = ChassisDsl.caterpillar
+val caterpillar = ChassisDsl.Caterpillar
 
-typealias ноги = Chassis.Legs
+typealias legs = Chassis.Legs
 
 @MakroBotDsl
 class WheelContext {
-    var диаметр by Delegates.notNull<Int>()
-    var количество by Delegates.notNull<Int>()
+    var diameter by Delegates.notNull<Int>()
+    var quantity by Delegates.notNull<Int>()
 }
