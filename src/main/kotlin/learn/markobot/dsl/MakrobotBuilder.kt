@@ -90,7 +90,7 @@ class EyesContext {
 
 @MakroBotDsl
 class EyeContext {
-    var quantity by Delegates.notNull<Int>()
+    var quantity by Delegates.notNull<Int>()    // why lateinit is not possible here?
     var brightness by Delegates.notNull<Int>()
 }
 
