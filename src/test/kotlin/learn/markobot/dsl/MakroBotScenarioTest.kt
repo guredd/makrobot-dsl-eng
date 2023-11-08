@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test
 class MakroBotScenarioTest {
 
     @Test
-    fun turnBack() {
+    fun testDSL() {
         val wallE = MakroBot("Wall-E",
                 Head(Plastik(2), listOf(LampEye(10), LampEye(10)), Mouth(Speaker(3))),
                 Body(Metal(1), listOf("I don't want to survive.", "I want live.")),
